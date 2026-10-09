@@ -1,19 +1,27 @@
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 load_dotenv()
 
-# Ensure GEMINI_API_KEY is present in your .env
-if not os.getenv("GEMINI_API_KEY"):
-    raise ValueError("GEMINI_API_KEY is missing from .env")
-
-# client automatically picks up os.environ["GEMINI_API_KEY"]
 client = genai.Client()
+
+audio_path = Path.cwd() / "src" / "lost_debit_card.wav"
+
+with open(audio_path, "rb") as f:
+    audio_bytes = f.read()
 
 response = client.models.generate_content(
     model="gemini-2.5-flash",
-    contents="Explain what Python is in one sentence."
+    contents=[
+        types.Part.from_bytes(
+            data=audio_bytes,
+            mime_type="audio/wav",
+        ),
+        "Generate a verbatim, accurate transcription of this audio file."
+    ],
 )
 
 print(response.text)
