@@ -1,3 +1,9 @@
 google-genai
 python-dotenv
-langchain
+
+langchain-core
+langchain-google-genai
+langchain-qdrant
+qdrant-client
+pydantic
+python-dotenv
